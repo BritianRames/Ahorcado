@@ -7,8 +7,8 @@ pygame.init()
 #########################################################
 ## Set Frame dimmension                                ##
 #########################################################
-winWidth = 1000
-winHeight = 600
+winWidth = 700
+winHeight = 480
 win = pygame.display.set_mode((winWidth,winHeight))
 
 #########################################################
@@ -30,7 +30,76 @@ buttons = []
 guessed = []
 hangmanPics = [pygame.image.load('./img/hangman0.png'), pygame.image.load('./img/hangman1.png'), pygame.image.load('./img/hangman2.png'), pygame.image.load('./img/hangman3.png'), pygame.image.load('./img/hangman4.png'), pygame.image.load('./img/hangman5.png'), pygame.image.load('./img/hangman6.png')]
 
+limbs = 0
 
+
+def redraw_game_window():
+    global guessed
+    global hangmanPics
+    global limbs
+    win.fill(GREEN)
+    # Buttons
+    for i in range(len(buttons)):
+        if buttons[i][4]:
+            pygame.draw.circle(win, BLACK, (buttons[i][1], buttons[i][2]), buttons[i][3])
+            pygame.draw.circle(win, buttons[i][0], (buttons[i][1], buttons[i][2]), buttons[i][3] - 2)
+            label = btn_font.render(chr(buttons[i][5]), 1, BLACK)
+            win.blit(label, (buttons[i][1] - (label.get_width() / 2), buttons[i][2] - (label.get_height() / 2)))
+
+    ##spaced = spacedOut(word, guessed)
+    ##label1 = guess_font.render(spaced, 1, BLACK)
+    ##rect = label1.get_rect()
+    ##length = rect[2]
+    
+    ##win.blit(label1,(winWidth/2 - length/2, 400))
+
+    pic = hangmanPics[limbs]
+    win.blit(pic, (winWidth/2 - pic.get_width()/2 + 20, 150))
+    pygame.display.update()
+
+#########################################################
+## Setup buttons.                                      ##
+## Need to identify which letter is pressed            ##
+#########################################################
+increase = round(winWidth / 13)
+for i in range(26):
+    if i < 13:
+        y = 40
+        x = 25 + (increase * i)
+    else:
+        x = 25 + (increase * (i - 13))
+        y = 85
+    buttons.append([LIGHT_BLUE, x, y, 20, True, 65 + i])
+    # buttons.append([color, x_pos, y_pos, radius, visible, char])
+
+##word = randomWord()
+inPlay = True
+
+while inPlay:
+    redraw_game_window()
+    #pygame.time.delay(10)
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            inPlay = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                inPlay = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            clickPos = pygame.mouse.get_pos()
+            #letter = buttonHit(clickPos[0], clickPos[1])
+            if letter != None:
+                guessed.append(chr(letter))
+                buttons[letter - 65][4] = False
+                if hang(chr(letter)):
+                    if limbs != 5:
+                        limbs += 1
+                    else:
+                        end()
+                else:
+                    print(spacedOut(word, guessed))
+                    if spacedOut(word, guessed).count('_') == 0:
+                        end(True)
 
 pygame.quit()
 
