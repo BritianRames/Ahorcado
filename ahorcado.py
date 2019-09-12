@@ -67,7 +67,8 @@ def buttonHit(x , y):
     for i in range(len(buttons)):
         if x < buttons[i][1]+20 and x > buttons[i][1]-20:
             if y < buttons[i][2]+20 and y > buttons[i][2]-20:
-                return buttons[i][5]
+                if buttons[i][4] == True:
+                    return buttons[i][5]
     return None
 
 def hang(guess):
@@ -99,7 +100,8 @@ def end(winner = False):
     winText = "YOU WIN!!!!"
     replayText = "Press any key to play again..."
     redraw_game_window()
-    pygame.time.delay(1000)
+    pygame.time.delay(500)
+    
     window.fill(GREEN)
 
     if winner == True:
@@ -123,7 +125,6 @@ def end(winner = False):
             if event.type == pygame.KEYDOWN:
                 again = False
     reset()
-    pygame.quit()
 
 def reset():
     global limbs
@@ -136,6 +137,7 @@ def reset():
     limbs = 0
     guessed = []
     word = randomWord()
+    print(word)
 
 #########################################################
 ## Setup buttons.                                      ##
@@ -155,10 +157,9 @@ for i in range(26):
 word = randomWord()
 print(word)
 inPlay = True
-
 while inPlay:
     redraw_game_window()
-    #pygame.time.delay(10)
+    pygame.time.delay(10)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -181,7 +182,7 @@ while inPlay:
                     print(spacedOut(word, guessed))
                     if spacedOut(word, guessed).count('_') == 0:
                         end(True)
-
+                            
 pygame.quit()
 
 # always quit pygame when done!
