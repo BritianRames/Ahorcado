@@ -9,7 +9,7 @@ pygame.init()
 #########################################################
 winWidth = 700
 winHeight = 480
-win = pygame.display.set_mode((winWidth,winHeight))
+window = pygame.display.set_mode((winWidth,winHeight))
 
 #########################################################
 ## Initialize global variables/constants               ##
@@ -37,25 +37,31 @@ def redraw_game_window():
     global guessed
     global hangmanPics
     global limbs
-    win.fill(GREEN)
+    window.fill(GREEN)
     # Buttons
     for i in range(len(buttons)):
         if buttons[i][4]:
-            pygame.draw.circle(win, BLACK, (buttons[i][1], buttons[i][2]), buttons[i][3])
-            pygame.draw.circle(win, buttons[i][0], (buttons[i][1], buttons[i][2]), buttons[i][3] - 2)
+            pygame.draw.circle(window, BLACK, (buttons[i][1], buttons[i][2]), buttons[i][3])
+            pygame.draw.circle(window, buttons[i][0], (buttons[i][1], buttons[i][2]), buttons[i][3] - 2)
             label = btn_font.render(chr(buttons[i][5]), 1, BLACK)
-            win.blit(label, (buttons[i][1] - (label.get_width() / 2), buttons[i][2] - (label.get_height() / 2)))
+            window.blit(label, (buttons[i][1] - (label.get_width() / 2), buttons[i][2] - (label.get_height() / 2)))
 
     ##spaced = spacedOut(word, guessed)
     ##label1 = guess_font.render(spaced, 1, BLACK)
     ##rect = label1.get_rect()
     ##length = rect[2]
     
-    ##win.blit(label1,(winWidth/2 - length/2, 400))
-
+    ##window.blit(label1,(winWidth/2 - length/2, 400))
+    pygame.draw.rect(window,(0, 153, 51),(winWidth/2-100,winHeight/2-100,230,250))
     pic = hangmanPics[limbs]
-    win.blit(pic, (winWidth/2 - pic.get_width()/2 + 20, 150))
+    window.blit(pic, (winWidth/2 - pic.get_width()/2 + 20, 150))
     pygame.display.update()
+
+def randomWord():
+    file = open("palabras.txt")
+    f = file.readlines()
+    i = random.randrange(0,len(f)-1)
+    return f[i][:-1]
 
 #########################################################
 ## Setup buttons.                                      ##
@@ -72,7 +78,7 @@ for i in range(26):
     buttons.append([LIGHT_BLUE, x, y, 20, True, 65 + i])
     # buttons.append([color, x_pos, y_pos, radius, visible, char])
 
-##word = randomWord()
+word = randomWord()
 inPlay = True
 
 while inPlay:
