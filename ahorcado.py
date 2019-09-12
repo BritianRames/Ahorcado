@@ -77,8 +77,6 @@ def hang(guess):
     else:
         return False
 
-def end():
-    pygame.quit()
 
 def spacedOut(word, guessed=[]):
     spacedWord = ''
@@ -93,6 +91,51 @@ def spacedOut(word, guessed=[]):
         elif word[x] == ' ':
             spacedWord += ' '
     return spacedWord
+
+
+def end(winner = False):
+    global limbs
+    lostText = "GAME OVER!!!!"
+    winText = "YOU WIN!!!!"
+    replayText = "Press any key to play again..."
+    redraw_game_window()
+    pygame.time.delay(1000)
+    window.fill(GREEN)
+
+    if winner == True:
+        label = lost_font.render(winText, 1, BLACK)
+    elif winner == False:
+        label = lost_font.render(lostText, 1, BLACK)
+    labelReplay = lost_font.render(replayText, 1, BLACK)
+
+    wordTxt = lost_font.render(word.upper(), 1, BLACK)
+    wordWas = lost_font.render('The phrase was: ', 1, BLACK)
+    window.blit(wordTxt, (winWidth/2 - wordTxt.get_width()/2, 295))
+    window.blit(wordWas, (winWidth/2 - wordWas.get_width()/2, 245))
+    window.blit(label, (winWidth / 2 - label.get_width() / 2, 140))
+    window.blit(labelReplay, (winWidth / 2 - labelReplay.get_width() / 2, 190))
+    pygame.display.update()
+    again = True
+    while again:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            if event.type == pygame.KEYDOWN:
+                again = False
+    reset()
+    pygame.quit()
+
+def reset():
+    global limbs
+    global guessed
+    global buttons
+    global word
+    for i in range(len(buttons)):
+        buttons[i][4] = True
+
+    limbs = 0
+    guessed = []
+    word = randomWord()
 
 #########################################################
 ## Setup buttons.                                      ##
