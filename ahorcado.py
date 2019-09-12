@@ -58,7 +58,7 @@ def redraw_game_window():
     pygame.display.update()
 
 def randomWord():
-    file = open("palabras.txt")
+    file = open("sentences.txt")
     f = file.readlines()
     i = random.randrange(0,len(f)-1)
     return f[i][:-1]
